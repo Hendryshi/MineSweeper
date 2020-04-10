@@ -28,52 +28,73 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
-            this.gameGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.newGameNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.mainMenuStrip.SuspendLayout();
-            this.SuspendLayout();
-            // 
-            // mainMenuStrip
-            // 
-            this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
+			this.gameGToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.newGameNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pnlInfo = new System.Windows.Forms.Panel();
+			this.pnlMine = new System.Windows.Forms.Panel();
+			this.mainMenuStrip.SuspendLayout();
+			this.SuspendLayout();
+			// 
+			// mainMenuStrip
+			// 
+			this.mainMenuStrip.BackColor = System.Drawing.SystemColors.ActiveBorder;
+			this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+			this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameGToolStripMenuItem});
-            this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
-            this.mainMenuStrip.Name = "mainMenuStrip";
-            this.mainMenuStrip.Size = new System.Drawing.Size(1231, 28);
-            this.mainMenuStrip.TabIndex = 0;
-            this.mainMenuStrip.Text = "menuStrip1";
-            // 
-            // gameGToolStripMenuItem
-            // 
-            this.gameGToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.mainMenuStrip.Location = new System.Drawing.Point(0, 0);
+			this.mainMenuStrip.Name = "mainMenuStrip";
+			this.mainMenuStrip.Size = new System.Drawing.Size(1182, 28);
+			this.mainMenuStrip.TabIndex = 0;
+			this.mainMenuStrip.Text = "menuStrip1";
+			// 
+			// gameGToolStripMenuItem
+			// 
+			this.gameGToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newGameNToolStripMenuItem});
-            this.gameGToolStripMenuItem.Name = "gameGToolStripMenuItem";
-            this.gameGToolStripMenuItem.Size = new System.Drawing.Size(86, 24);
-            this.gameGToolStripMenuItem.Text = "Game(&G)";
-            // 
-            // newGameNToolStripMenuItem
-            // 
-            this.newGameNToolStripMenuItem.Name = "newGameNToolStripMenuItem";
-            this.newGameNToolStripMenuItem.Size = new System.Drawing.Size(193, 26);
-            this.newGameNToolStripMenuItem.Text = "New Game(&N)";
-            // 
-            // mainForm
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1231, 702);
-            this.Controls.Add(this.mainMenuStrip);
-            this.MainMenuStrip = this.mainMenuStrip;
-            this.Name = "mainForm";
-            this.Text = "MineSweeper";
-            this.Load += new System.EventHandler(this.mainForm_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.mainForm_Paint);
-            this.mainMenuStrip.ResumeLayout(false);
-            this.mainMenuStrip.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+			this.gameGToolStripMenuItem.Name = "gameGToolStripMenuItem";
+			this.gameGToolStripMenuItem.Size = new System.Drawing.Size(86, 24);
+			this.gameGToolStripMenuItem.Text = "Game(&G)";
+			// 
+			// newGameNToolStripMenuItem
+			// 
+			this.newGameNToolStripMenuItem.Name = "newGameNToolStripMenuItem";
+			this.newGameNToolStripMenuItem.Size = new System.Drawing.Size(193, 26);
+			this.newGameNToolStripMenuItem.Text = "New Game(&N)";
+			// 
+			// pnlInfo
+			// 
+			this.pnlInfo.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.pnlInfo.Location = new System.Drawing.Point(12, 41);
+			this.pnlInfo.Name = "pnlInfo";
+			this.pnlInfo.Size = new System.Drawing.Size(1158, 52);
+			this.pnlInfo.TabIndex = 1;
+			// 
+			// pnlMine
+			// 
+			this.pnlMine.BackColor = System.Drawing.SystemColors.GrayText;
+			this.pnlMine.Location = new System.Drawing.Point(12, 99);
+			this.pnlMine.Name = "pnlMine";
+			this.pnlMine.Size = new System.Drawing.Size(1158, 591);
+			this.pnlMine.TabIndex = 2;
+			// 
+			// mainForm
+			// 
+			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.ClientSize = new System.Drawing.Size(1182, 702);
+			this.Controls.Add(this.pnlMine);
+			this.Controls.Add(this.pnlInfo);
+			this.Controls.Add(this.mainMenuStrip);
+			this.MainMenuStrip = this.mainMenuStrip;
+			this.Name = "mainForm";
+			this.Text = "MineSweeper";
+			this.Load += new System.EventHandler(this.mainForm_Load);
+			this.Paint += new System.Windows.Forms.PaintEventHandler(this.mainForm_Paint);
+			this.mainMenuStrip.ResumeLayout(false);
+			this.mainMenuStrip.PerformLayout();
+			this.ResumeLayout(false);
+			this.PerformLayout();
 
         }
 
@@ -82,6 +103,8 @@
         private System.Windows.Forms.MenuStrip mainMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem gameGToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem newGameNToolStripMenuItem;
+        private System.Windows.Forms.Panel pnlInfo;
+        private System.Windows.Forms.Panel pnlMine;
     }
 }
 

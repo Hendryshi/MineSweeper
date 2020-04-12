@@ -7,11 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MineSweeper.Model;
 
 namespace MineSweeper
 {
 	public partial class mainForm : Form
 	{
+		private Game game;
+
 		public mainForm()
 		{
 			InitializeComponent();
@@ -19,7 +22,11 @@ namespace MineSweeper
 
 		private void mainForm_Paint(object sender, PaintEventArgs e)
 		{
-			string currentDir = Environment.CurrentDirectory;
+			//game.Draw(this.CreateGraphics(), pnlInfo.CreateGraphics(), pnlMine.CreateGraphics());
+			Size a = ClientRectangle.Size;
+			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
+
+
 			Graphics g = this.pnlMine.CreateGraphics();
 			Bitmap newImage = new Bitmap("..\\..\\Img\\mine.bmp");
 			int width = newImage.Width;
@@ -28,7 +35,7 @@ namespace MineSweeper
 			float x = 0;
 			float y = 0;
 
-			
+
 			// Create rectangle for source image.
 			RectangleF srcRect = new RectangleF(0, 0, 20, 20);
 			GraphicsUnit units = GraphicsUnit.Pixel;
@@ -45,24 +52,17 @@ namespace MineSweeper
 
 		private void mainForm_Load(object sender, EventArgs e)
 		{
+			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
+			game = new Game(gameOffsetPosition);
 
-			int borderWidth = (Width - ClientSize.Width) / 2;
-			int borderHeight = (Height - ClientSize.Height) / 2;
+			pnlInfo.Location = game.GameFrame.RctPnlInfo.Location;
+			pnlInfo.Size = game.GameFrame.RctPnlInfo.Size;
 
-			this.pnlInfo.Width = 20 * 9;
-			this.pnlInfo.Height = 50;
+			pnlMine.Location = game.GameFrame.RctPnlMine.Location;
+			pnlMine.Size = game.GameFrame.RctPnlMine.Size;
+
+			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
 			
-			this.pnlInfo.Location = new Point(5, this.mainMenuStrip.Height + 5);
-
-			this.pnlMine.Width = 20 * 9;
-			this.pnlMine.Height = 20 * 9;
-
-			this.pnlMine.Location = new Point(5, this.pnlInfo.Location.Y + pnlInfo.Height + 5);
-
-			ClientSize = new Size(10 + pnlMine.Width, pnlMine.Location.Y + pnlMine.Height + 5);
-
-			//Size = new Size(1000, 500);
-		
 		}
 	}
 }

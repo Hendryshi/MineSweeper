@@ -38,7 +38,7 @@
 			// 
 			// mainMenuStrip
 			// 
-			this.mainMenuStrip.BackColor = System.Drawing.SystemColors.ActiveBorder;
+			this.mainMenuStrip.BackColor = System.Drawing.SystemColors.InactiveCaption;
 			this.mainMenuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
 			this.mainMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gameGToolStripMenuItem});
@@ -64,7 +64,7 @@
 			// 
 			// pnlInfo
 			// 
-			this.pnlInfo.BackColor = System.Drawing.SystemColors.HotTrack;
+			this.pnlInfo.BackColor = System.Drawing.SystemColors.ControlDark;
 			this.pnlInfo.Location = new System.Drawing.Point(12, 41);
 			this.pnlInfo.Name = "pnlInfo";
 			this.pnlInfo.Size = new System.Drawing.Size(1158, 52);
@@ -72,7 +72,7 @@
 			// 
 			// pnlMine
 			// 
-			this.pnlMine.BackColor = System.Drawing.SystemColors.GrayText;
+			this.pnlMine.BackColor = System.Drawing.SystemColors.Info;
 			this.pnlMine.Location = new System.Drawing.Point(12, 99);
 			this.pnlMine.Name = "pnlMine";
 			this.pnlMine.Size = new System.Drawing.Size(1158, 591);

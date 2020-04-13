@@ -10,8 +10,7 @@ namespace MineSweeper.Model
 {
 	class Frame
 	{
-		//private readonly int border_width;
-
+		
 		private readonly Rectangle rctPnlInfo;
 
 		private readonly Rectangle rctPnlMine;
@@ -22,21 +21,24 @@ namespace MineSweeper.Model
 		private Bitmap bufferInfoFrame;
 		private Bitmap bufferMineFrame;
 
-		private readonly int squareWidth = 20;
 
 		private readonly int boardWidth = Int16.Parse(ConfigurationManager.AppSettings["boardWidth"]);
+		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
+		private readonly int pnlInfoHeight = Int16.Parse(ConfigurationManager.AppSettings["pnlInfoHeight"]);
+		private readonly Bitmap imgMine = new Bitmap(@"..\..\Img\mine.bmp");
 
-		
+
 		private Color GRAY = Color.FromArgb(192, 192, 192);
 		private Color DARK_GRAY = Color.FromArgb(128, 128, 128);
 		private Color WHITE = Color.FromArgb(255, 255, 255);
 
+		public const int ImgUnitWidth = 20;
 
 		public Frame(Point gameOffsetPosition, Size mineCountSize)
 		{
-			int pnlWidth = mineCountSize.Width * squareWidth;
-			int pnlHeight = mineCountSize.Height * squareWidth;
-			rctPnlInfo = new Rectangle(new Point(gameOffsetPosition.X + boardWidth, gameOffsetPosition.Y + boardWidth), new Size(pnlWidth, 40));
+			int pnlWidth = mineCountSize.Width * squareSize;
+			int pnlHeight = mineCountSize.Height * squareSize;
+			rctPnlInfo = new Rectangle(new Point(gameOffsetPosition.X + boardWidth, gameOffsetPosition.Y + boardWidth), new Size(pnlWidth, pnlInfoHeight));
 			rctPnlMine = new Rectangle(new Point(rctPnlInfo.X, rctPnlInfo.Y + rctPnlInfo.Height + boardWidth), new Size(pnlWidth, pnlHeight));
 
 			rctGameField = new Rectangle(gameOffsetPosition, new Size(pnlWidth + boardWidth * 2, rctPnlInfo.Height + RctPnlMine.Height + boardWidth * 3));
@@ -50,6 +52,7 @@ namespace MineSweeper.Model
 		public Rectangle RctPnlInfo { get => rctPnlInfo; }
 		public Rectangle RctPnlMine { get => rctPnlMine; }
 		public Rectangle RctGameField { get => rctGameField; }
+		public Bitmap MineFrame { get => bufferMineFrame; }
 
 
 		public Bitmap DrawMainFrame()
@@ -78,27 +81,18 @@ namespace MineSweeper.Model
 			return bufferMainFrame;
 		}
 
-		//string currentDir = Environment.CurrentDirectory;
-		//Graphics g = this.pnlMine.CreateGraphics();
-		//Bitmap newImage = new Bitmap("..\\..\\Img\\mine.bmp");
-		//int width = newImage.Width;
-		//int height = newImage.Height;
-		//// Create coordinates for upper-left corner of image.
-		//float x = 0;
-		//float y = 0;
+		public Bitmap DrawSquare(Square square)
+		{
+			Graphics g = Graphics.FromImage(bufferMineFrame);
+			int srcY = (int)square.Status + (square.Status == MineStatus.OpenedNumber ? (Square.MaxSquareNum - square.Value) * ImgUnitWidth : 0);
+			Rectangle mineRect = new Rectangle(square.Location, new Size(squareSize, squareSize));
+			Rectangle srcRect = new Rectangle(new Point(0, srcY), new Size(ImgUnitWidth, ImgUnitWidth));
 
+			GraphicsUnit units = GraphicsUnit.Pixel;
+			g.DrawImage(imgMine, mineRect, srcRect, units);
 
-		//// Create rectangle for source image.
-		//RectangleF srcRect = new RectangleF(0, 0, 20, 20);
-		//GraphicsUnit units = GraphicsUnit.Pixel;
-		//// Draw image to screen.
-		//g.DrawImage(newImage, new Rectangle(0, 0, 20, 20), srcRect, units);
-		//	g.DrawImage(newImage, new Rectangle(20, 0, 20, 20), srcRect, units);
-		//	g.DrawImage(newImage, new Rectangle(0, 20, 20, 20), srcRect, units);
-		//	g.DrawImage(newImage, new Rectangle(20, 20, 20, 20), srcRect, units);
+			return bufferMineFrame;
+		}
 
-		//	Graphics xd = this.pnlMine.CreateGraphics();
-
-		//xd.DrawImage(newImage, new Rectangle(0, 0, 20, 20), srcRect, units);
 	}
 }

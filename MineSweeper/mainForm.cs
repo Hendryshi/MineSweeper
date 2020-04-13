@@ -25,29 +25,7 @@ namespace MineSweeper
 			//game.Draw(this.CreateGraphics(), pnlInfo.CreateGraphics(), pnlMine.CreateGraphics());
 			Size a = ClientRectangle.Size;
 			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
-
-
-			Graphics g = this.pnlMine.CreateGraphics();
-			Bitmap newImage = new Bitmap("..\\..\\Img\\mine.bmp");
-			int width = newImage.Width;
-			int height = newImage.Height;
-			// Create coordinates for upper-left corner of image.
-			float x = 0;
-			float y = 0;
-
-
-			// Create rectangle for source image.
-			RectangleF srcRect = new RectangleF(0, 0, 20, 20);
-			GraphicsUnit units = GraphicsUnit.Pixel;
-			// Draw image to screen.
-			g.DrawImage(newImage, new Rectangle(0, 0, 20, 20), srcRect, units);
-			g.DrawImage(newImage, new Rectangle(20, 0, 20, 20), srcRect, units);
-			g.DrawImage(newImage, new Rectangle(0, 20, 20, 20), srcRect, units);
-			g.DrawImage(newImage, new Rectangle(20, 20, 20, 20), srcRect, units);
-
-			Graphics xd = this.pnlMine.CreateGraphics();
-
-			xd.DrawImage(newImage, new Rectangle(0, 0, 20, 20), srcRect, units);
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 		}
 
 		private void mainForm_Load(object sender, EventArgs e)
@@ -63,6 +41,37 @@ namespace MineSweeper
 
 			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
 			
+		}
+
+		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
+		{
+			if(game.IsStart)
+			{
+				game.KnuthShuffleMine();
+				game.IsStart = false;
+			}
+
+			switch(e.Button)
+			{
+				case MouseButtons.Left:
+					game.OpenSquare(e.Location);
+					break;
+				//case MouseButtons.Right:
+				//	game.AddRemoveFlag(e.Location);
+				//	break;
+			}
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+		}
+
+		private void pnlMine_MouseDown(object sender, MouseEventArgs e)
+		{
+			switch(e.Button)
+			{
+				case MouseButtons.Right:
+					game.AddRemoveFlag(e.Location);
+					break;
+			}
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 		}
 	}
 }

@@ -77,6 +77,8 @@
 			this.pnlMine.Name = "pnlMine";
 			this.pnlMine.Size = new System.Drawing.Size(1158, 591);
 			this.pnlMine.TabIndex = 2;
+			this.pnlMine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseClick);
+			this.pnlMine.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseDown);
 			// 
 			// mainForm
 			// 

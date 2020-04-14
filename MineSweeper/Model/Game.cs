@@ -54,17 +54,18 @@ namespace MineSweeper.Model
 			if(sq.IsClosed())
 			{
 				sq.OpenSquare();
-				gameFrame.DrawSquare(sq);
-
+				
 				if(sq.Value == 0)
 					ExpandSquares(sq);
+				
+				gameFrame.DrawSquare(sq);
 			}
 		}
 
 		public void AddRemoveFlag(Point point)
 		{
 			Square sq = squares[point.X / squareSize, point.Y / squareSize];
-			if(sq.IsClosed() || sq.Status == MineStatus.Flagged)
+			if(sq.IsClosed())
 			{
 				sq.AddRemoveFlag();
 				gameFrame.DrawSquare(sq);
@@ -83,6 +84,18 @@ namespace MineSweeper.Model
 			}
 		}
 
+		public void OpenAroundSquare(Point point)
+		{
+			if(point.X > 0 && point.Y > 0)
+			{
+				Square sq = squares[point.X / squareSize, point.Y / squareSize];
+				
+				if(sq.Value - sq.GetAroundFlagCount(squares) == 0)
+					ExpandSquares(sq);
+			}
+		}
+		
+		//TODO: the first should always be 0
 		public void KnuthShuffleMine()
 		{
 			Random ran = new Random();

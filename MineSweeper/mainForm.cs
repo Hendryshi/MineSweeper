@@ -14,6 +14,9 @@ namespace MineSweeper
 	public partial class mainForm : Form
 	{
 		private Game game;
+		private bool leftDown = false;
+		private bool rightDown = false;
+		int test = 0;
 
 		public mainForm()
 		{
@@ -45,30 +48,48 @@ namespace MineSweeper
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
 		{
-			if(game.IsStart)
+			if(e.Button == MouseButtons.Left && (!leftDown || !rightDown))
 			{
-				game.KnuthShuffleMine();
-				game.IsStart = false;
+				if(game.IsStart)
+				{
+					game.KnuthShuffleMine();
+					game.IsStart = false;
+				}
+				game.OpenSquare(e.Location);
+				pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 			}
-
-			switch(e.Button)
-			{
-				case MouseButtons.Left:
-					game.OpenSquare(e.Location);
-					break;
-				//case MouseButtons.Right:
-				//	game.AddRemoveFlag(e.Location);
-				//	break;
-			}
-			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 		}
 
 		private void pnlMine_MouseDown(object sender, MouseEventArgs e)
 		{
 			switch(e.Button)
 			{
+				case MouseButtons.Left:
+					leftDown = true;
+					break;
 				case MouseButtons.Right:
-					game.AddRemoveFlag(e.Location);
+					rightDown = true;
+					if(!leftDown)
+						game.AddRemoveFlag(e.Location);
+					break;			
+			}
+			
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+		}
+
+		private void pnlMine_MouseUp(object sender, MouseEventArgs e)
+		{
+			if(leftDown && rightDown)
+				game.OpenAroundSquare(e.Location);
+
+			switch(e.Button)
+			{
+				case MouseButtons.Left:
+					leftDown = false;
+					break;
+				case MouseButtons.Right:
+					rightDown = false;
+					//game.AddRemoveFlag(e.Location);
 					break;
 			}
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);

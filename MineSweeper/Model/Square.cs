@@ -47,13 +47,18 @@ namespace MineSweeper.Model
 
 		public bool IsClosed()
 		{
-			return this.status == MineStatus.Closed;
+			return this.status == MineStatus.Closed || this.status == MineStatus.Flagged;
 		}
 
 		public void OpenSquare()
 		{
 			if(IsMine())
-				this.status = MineStatus.HitMine;
+			{
+				if(this.status == MineStatus.Closed)
+					this.status = MineStatus.HitMine;
+			}
+			else if(this.status == MineStatus.Flagged)
+				this.status = MineStatus.ErrorMine;
 			else
 				this.status = MineStatus.OpenedNumber;
 		}
@@ -81,6 +86,17 @@ namespace MineSweeper.Model
 				query = query.ToList().Where(sq => sq.IsClosed());
 
 			return query.ToList();
+		}
+
+		public int GetAroundFlagCount(Square[,] squares)
+		{
+			var query = from Square sq in squares
+						where sq.location.X >= this.location.X - squareSize && sq.location.X <= this.location.X + squareSize
+						&& sq.location.Y >= this.location.Y - squareSize && sq.location.Y <= this.location.Y + squareSize
+						&& sq.location != this.location && sq.status == MineStatus.Flagged
+						select sq;
+
+			return query.Count();
 		}
 
 		public Point Location { get => location; }

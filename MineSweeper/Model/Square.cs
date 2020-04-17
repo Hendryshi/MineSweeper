@@ -47,20 +47,35 @@ namespace MineSweeper.Model
 
 		public bool IsClosed()
 		{
-			return this.status == MineStatus.Closed || this.status == MineStatus.Flagged;
+			return this.status == MineStatus.Closed || this.status == MineStatus.Flagged || this.status == MineStatus.MouseDown;
 		}
 
-		public void OpenSquare()
+		public bool OpenSquare(bool hitMine = true, bool hasWin = false)
 		{
+			bool isCorrect = false;
 			if(IsMine())
 			{
-				if(this.status == MineStatus.Closed)
-					this.status = MineStatus.HitMine;
+				if(this.status == MineStatus.Closed || this.status == MineStatus.MouseDown)
+				{
+					if(hasWin)
+						this.status = MineStatus.Flagged;
+					else if(hitMine)
+						this.status = MineStatus.HitMine;
+					else
+						this.status = MineStatus.OpenedMine;
+				}
+				else if(this.status == MineStatus.Flagged)
+					isCorrect = true;
 			}
 			else if(this.status == MineStatus.Flagged)
 				this.status = MineStatus.ErrorMine;
 			else
+			{
 				this.status = MineStatus.OpenedNumber;
+				isCorrect = true;
+			}
+
+			return isCorrect;
 		}
 
 		public void AddRemoveFlag()
@@ -71,6 +86,11 @@ namespace MineSweeper.Model
 				this.status = MineStatus.Flagged;
 		}
 
+		public void SetDown()
+		{
+			if(this.status == MineStatus.Closed)
+				this.status = MineStatus.MouseDown;
+		}
 
 		public List<Square> GetAroundSquare(Square[,] squares, bool excludeMine = false, bool excludeOpen = false)
 		{
@@ -99,6 +119,17 @@ namespace MineSweeper.Model
 			return query.Count();
 		}
 
+		public int GetAroundMineCount(Square[,] squares)
+		{
+			var query = from Square sq in squares
+						where sq.location.X >= this.location.X - squareSize && sq.location.X <= this.location.X + squareSize
+						&& sq.location.Y >= this.location.Y - squareSize && sq.location.Y <= this.location.Y + squareSize
+						&& sq.location != this.location && sq.value == -1
+						select sq;
+
+			return query.Count();
+		}
+
 		public Point Location { get => location; }
 		public int Value { get => value; set { this.value = value; } }
 		public MineStatus Status { get => status; set { status = value; } }
@@ -112,5 +143,6 @@ namespace MineSweeper.Model
 		ErrorMine = 80,
 		OpenedMine = 100,
 		OpenedNumber = 140,
+		MouseDown = 300
 	}
 }

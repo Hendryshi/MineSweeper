@@ -48,12 +48,14 @@ namespace MineSweeper
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Left && (!leftDown || !rightDown))
+			if(e.Button == MouseButtons.Left && (!leftDown || !rightDown) && game.InGameSize(e.Location))
 			{
-				if(game.IsStart)
+				if(!game.IsStart)
 				{
-					game.KnuthShuffleMine();
-					game.IsStart = false;
+					game.KnuthShuffleMine(e.Location);
+					game.IsStart = true;
+					//game.OpenAllSquares();
+					//MessageBox.Show(game.getMineCount().ToString());
 				}
 				game.OpenSquare(e.Location);
 				pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
@@ -73,14 +75,17 @@ namespace MineSweeper
 						game.AddRemoveFlag(e.Location);
 					break;			
 			}
-			
+
+			if(leftDown && rightDown && game.InGameSize(e.Location))
+				game.SetSquaresDown(e.Location, true);
+
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 		}
 
 		private void pnlMine_MouseUp(object sender, MouseEventArgs e)
 		{
-			if(leftDown && rightDown)
-				game.OpenAroundSquare(e.Location);
+			if(leftDown && rightDown && game.InGameSize(e.Location))
+				game.OpenAroundSquares(e.Location);
 
 			switch(e.Button)
 			{
@@ -92,7 +97,30 @@ namespace MineSweeper
 					//game.AddRemoveFlag(e.Location);
 					break;
 			}
+			game.SetAllSquaresUp();
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+		}
+
+		private void pnlMine_MouseMove(object sender, MouseEventArgs e)
+		{
+			if(game.InGameSize(e.Location))
+			{
+				if(leftDown)
+				{
+					game.SetSquaresDown(e.Location, rightDown);
+					pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+				}
+			}
+		}
+
+		private void pnlMine_MouseEnter(object sender, EventArgs e)
+		{
+
+		}
+
+		private void pnlMine_MouseLeave(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

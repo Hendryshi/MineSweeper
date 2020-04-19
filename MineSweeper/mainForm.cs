@@ -29,9 +29,15 @@ namespace MineSweeper
 			Size a = ClientRectangle.Size;
 			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
 		}
 
 		private void mainForm_Load(object sender, EventArgs e)
+		{
+			newGame();
+		}
+
+		private void newGame()
 		{
 			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
 			game = new Game(gameOffsetPosition);
@@ -43,7 +49,10 @@ namespace MineSweeper
 			pnlMine.Size = game.GameFrame.RctPnlMine.Size;
 
 			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
-			
+
+			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
 		}
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
@@ -57,8 +66,8 @@ namespace MineSweeper
 					//game.OpenAllSquares();
 					//MessageBox.Show(game.getMineCount().ToString());
 				}
-				game.OpenSquare(e.Location);
-				pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+				game.OpenSingleSquare(e.Location);
+				RefreshFrame();
 			}
 		}
 
@@ -68,6 +77,8 @@ namespace MineSweeper
 			{
 				case MouseButtons.Left:
 					leftDown = true;
+					game.SetSquaresDown(e.Location, rightDown);
+					game.ChangeFace(GameFace.MouthOpen);
 					break;
 				case MouseButtons.Right:
 					rightDown = true;
@@ -79,7 +90,7 @@ namespace MineSweeper
 			if(leftDown && rightDown && game.InGameSize(e.Location))
 				game.SetSquaresDown(e.Location, true);
 
-			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			RefreshFrame();
 		}
 
 		private void pnlMine_MouseUp(object sender, MouseEventArgs e)
@@ -98,7 +109,8 @@ namespace MineSweeper
 					break;
 			}
 			game.SetAllSquaresUp();
-			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			game.ChangeFace(GameFace.SmileUp);
+			RefreshFrame();
 		}
 
 		private void pnlMine_MouseMove(object sender, MouseEventArgs e)
@@ -108,7 +120,7 @@ namespace MineSweeper
 				if(leftDown)
 				{
 					game.SetSquaresDown(e.Location, rightDown);
-					pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+					RefreshFrame();
 				}
 			}
 		}
@@ -121,6 +133,17 @@ namespace MineSweeper
 		private void pnlMine_MouseLeave(object sender, EventArgs e)
 		{
 
+		}
+
+		private void RefreshFrame()
+		{
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
+		}
+
+		private void pnlInfo_MouseClick(object sender, MouseEventArgs e)
+		{
+			newGame();
 		}
 	}
 }

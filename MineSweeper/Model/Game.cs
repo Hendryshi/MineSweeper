@@ -13,7 +13,7 @@ namespace MineSweeper.Model
 		private Square[,] squares;
 		private Frame gameFrame;
 		private bool isStart;
-		
+
 		private readonly GameLevel level;
 		private readonly int mineCount;
 		private readonly Size gameOffsetSize;
@@ -43,11 +43,11 @@ namespace MineSweeper.Model
 		public Game(Point gameOffsetPosition)
 		{
 			//this.gameOffsetSize = gameOffsetPosition;
-			squares = new Square[30,16];
+			squares = new Square[30, 16];
 			isStart = false;
 			level = GameLevel.Beginner;
 			mineCount = 99;
-			gameFrame = new Frame(gameOffsetPosition, new Size(squares.GetLength(0),squares.GetLength(1)));
+			gameFrame = new Frame(gameOffsetPosition, new Size(squares.GetLength(0), squares.GetLength(1)));
 			CreateSquares();
 		}
 
@@ -67,14 +67,14 @@ namespace MineSweeper.Model
 				{
 					int squareValue = y * squares.GetLength(0) + x < mineCount ? -1 : 0;
 					Square sq = new Square(new Point(x * squareSize, y * squareSize), squareValue);
-					
+
 					gameFrame.DrawSquare(sq);
 					squares[x, y] = sq;
 				}
 			}
 		}
 
-		public void OpenSquare(Point point)
+		public void OpenSingleSquare(Point point)
 		{
 			Square sq = squares[point.X / squareSize, point.Y / squareSize];
 			if(sq.IsClosed())
@@ -85,7 +85,10 @@ namespace MineSweeper.Model
 				if(isCorrect && sq.Value == 0)
 					ExpandSquares(sq);
 				else if(!isCorrect)
+				{
 					OpenAllMines();
+					ChangeFace(GameFace.Crying);
+				}
 			}
 
 			IsWin();
@@ -158,7 +161,7 @@ namespace MineSweeper.Model
 
 		public bool IsWin()
 		{
-			
+
 			foreach(Square sq in squares)
 			{
 				if(!sq.IsMine() && sq.Status != MineStatus.OpenedNumber)
@@ -174,14 +177,14 @@ namespace MineSweeper.Model
 		{
 			SetAllSquaresUp();
 			Square sq = squares[point.X / squareSize, point.Y / squareSize];
-			sq.SetDown();
+			sq.SetSquareDown();
 			gameFrame.DrawSquare(sq);
 
 			if(getAround)
 			{
 				foreach(Square sqAround in sq.GetAroundSquare(squares, false, true))
 				{
-					sqAround.SetDown();
+					sqAround.SetSquareDown();
 					gameFrame.DrawSquare(sqAround);
 				}
 			}
@@ -199,6 +202,12 @@ namespace MineSweeper.Model
 			}
 		}
 
+		public void ChangeFace(GameFace gf)
+		{
+			gameFrame.DrawFace(gf);
+		}
+
+
 		public void KnuthShuffleMine(Point point)
 		{
 			Random ran = new Random();
@@ -208,28 +217,23 @@ namespace MineSweeper.Model
 
 			int indexOffset = sqPoint.GetAroundMineCount(squares) + (sqPoint.IsMine() ? 1 : 0);
 
-
 			for(int y = 0; y <= squares.GetLength(1) - 1; y++)
 			{
 				for(int x = 0; x <= squares.GetLength(0) - 1; x++)
 				{
 					// this area cannot be mine
 					if(x >= indexX - 1 && x <= indexX + 1 && y >= indexY - 1 && y <= indexY + 1)
-					{
 						squares[x, y].Value = 0;
-					}
 					else
 					{
-
 						Point ranP = GetRandomPoint(ran, x, y, indexX, indexY);
 						int ranSquareValue = ranP.Y * squares.GetLength(0) + ranP.X < mineCount + indexOffset ? -1 : squares[ranP.X, ranP.Y].Value;
 
 						int value = y * squares.GetLength(0) + x < mineCount + indexOffset ? -1 : squares[x, y].Value;
-						squares[x, y].Value = ranSquareValue; 
+						squares[x, y].Value = ranSquareValue;
 						squares[ranP.X, ranP.Y].Value = value;
 						gameFrame.DrawSquare(squares[x, y]);
 					}
-					int a = getMineCount();
 				}
 			}
 
@@ -272,5 +276,14 @@ namespace MineSweeper.Model
 		Intermediate,
 		Expert,
 		Custome
+	}
+
+	public enum GameFace
+	{
+		SmileDown = 0,
+		SunGlasses = 24,
+		Crying = 48,
+		MouthOpen = 72,
+		SmileUp = 96
 	}
 }

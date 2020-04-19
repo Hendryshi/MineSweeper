@@ -86,7 +86,7 @@ namespace MineSweeper.Model
 				this.status = MineStatus.Flagged;
 		}
 
-		public void SetDown()
+		public void SetSquareDown()
 		{
 			if(this.status == MineStatus.Closed)
 				this.status = MineStatus.MouseDown;

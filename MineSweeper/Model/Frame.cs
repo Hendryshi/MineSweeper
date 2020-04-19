@@ -26,13 +26,15 @@ namespace MineSweeper.Model
 		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
 		private readonly int pnlInfoHeight = Int16.Parse(ConfigurationManager.AppSettings["pnlInfoHeight"]);
 		private readonly Bitmap imgMine = new Bitmap(@"..\..\Img\mine.bmp");
+		private readonly Bitmap imgFace = new Bitmap(@"..\..\Img\face.bmp");
 
 
 		private Color GRAY = Color.FromArgb(192, 192, 192);
 		private Color DARK_GRAY = Color.FromArgb(128, 128, 128);
 		private Color WHITE = Color.FromArgb(255, 255, 255);
 
-		public const int ImgUnitWidth = 20;
+		public const int ImgMineUnitWidth = 20;
+		public const int ImgFaceUnitWidth = 24;
 
 		public Frame(Point gameOffsetPosition, Size mineCountSize)
 		{
@@ -46,6 +48,7 @@ namespace MineSweeper.Model
 			bufferMainFrame = new Bitmap(rctGameField.Width, rctGameField.Height);
 			bufferInfoFrame = new Bitmap(rctPnlInfo.Width, rctPnlInfo.Height);
 			bufferMineFrame = new Bitmap(rctPnlMine.Width, rctPnlMine.Height);
+			DrawFace();
 		}
 
 
@@ -53,6 +56,7 @@ namespace MineSweeper.Model
 		public Rectangle RctPnlMine { get => rctPnlMine; }
 		public Rectangle RctGameField { get => rctGameField; }
 		public Bitmap MineFrame { get => bufferMineFrame; }
+		public Bitmap InfoFrame { get => bufferInfoFrame; }
 
 
 		public Bitmap DrawMainFrame()
@@ -84,12 +88,27 @@ namespace MineSweeper.Model
 		public Bitmap DrawSquare(Square square)
 		{
 			Graphics g = Graphics.FromImage(bufferMineFrame);
-			int srcY = (int)square.Status + (square.Status == MineStatus.OpenedNumber ? (Square.MaxSquareNum - square.Value) * ImgUnitWidth : 0);
+			int srcY = (int)square.Status + (square.Status == MineStatus.OpenedNumber ? (Square.MaxSquareNum - square.Value) * ImgMineUnitWidth : 0);
 			Rectangle mineRect = new Rectangle(square.Location, new Size(squareSize, squareSize));
-			Rectangle srcRect = new Rectangle(new Point(0, srcY), new Size(ImgUnitWidth, ImgUnitWidth));
+			Rectangle srcRect = new Rectangle(new Point(0, srcY), new Size(ImgMineUnitWidth, ImgMineUnitWidth));
 
 			GraphicsUnit units = GraphicsUnit.Pixel;
 			g.DrawImage(imgMine, mineRect, srcRect, units);
+
+			return bufferMineFrame;
+		}
+
+		public Bitmap DrawFace(GameFace gameFace = GameFace.SmileUp)
+		{
+			Graphics g = Graphics.FromImage(bufferInfoFrame);
+			int faceSize = (rctPnlInfo.Height - 12);
+			
+			Rectangle faceRect = new Rectangle(new Point(rctPnlInfo.Width / 2 - faceSize / 2, rctPnlInfo.Height / 2 - faceSize / 2), new Size(faceSize, faceSize));
+			int a = imgFace.Height;
+			Rectangle srcRect = new Rectangle(new Point(0, (int)gameFace), new Size(ImgFaceUnitWidth, ImgFaceUnitWidth));
+
+			GraphicsUnit units = GraphicsUnit.Pixel;
+			g.DrawImage(imgFace, faceRect, srcRect, units);
 
 			return bufferMineFrame;
 		}

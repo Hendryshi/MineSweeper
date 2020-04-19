@@ -1,4 +1,6 @@
-﻿namespace MineSweeper
+﻿using System.Drawing;
+
+namespace MineSweeper
 {
     partial class mainForm
     {
@@ -64,11 +66,12 @@
 			// 
 			// pnlInfo
 			// 
-			this.pnlInfo.BackColor = System.Drawing.SystemColors.ControlDark;
+			this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
 			this.pnlInfo.Location = new System.Drawing.Point(12, 41);
 			this.pnlInfo.Name = "pnlInfo";
 			this.pnlInfo.Size = new System.Drawing.Size(1158, 52);
 			this.pnlInfo.TabIndex = 1;
+			this.pnlInfo.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlInfo_MouseClick);
 			// 
 			// pnlMine
 			// 

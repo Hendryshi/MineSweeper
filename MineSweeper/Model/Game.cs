@@ -13,9 +13,10 @@ namespace MineSweeper.Model
 		private Square[,] squares;
 		private Frame gameFrame;
 		private bool isStart;
+		private bool? result;
 
 		private readonly GameLevel level;
-		private readonly int mineCount;
+		private int mineCount;
 		private readonly Size gameOffsetSize;
 		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
 
@@ -45,14 +46,17 @@ namespace MineSweeper.Model
 			//this.gameOffsetSize = gameOffsetPosition;
 			squares = new Square[30, 16];
 			isStart = false;
+			result = null;
 			level = GameLevel.Beginner;
 			mineCount = 99;
-			gameFrame = new Frame(gameOffsetPosition, new Size(squares.GetLength(0), squares.GetLength(1)));
+			gameFrame = new Frame(gameOffsetPosition, new Size(squares.GetLength(0), squares.GetLength(1)), mineCount);
 			CreateSquares();
 		}
 
 		public Frame GameFrame { get => gameFrame; }
 		public bool IsStart { get => isStart; set { isStart = value; } }
+
+		public bool? Result { get => result; }
 
 		public bool InGameSize(Point location)
 		{
@@ -79,44 +83,14 @@ namespace MineSweeper.Model
 			Square sq = squares[point.X / squareSize, point.Y / squareSize];
 			if(sq.IsClosed())
 			{
-				bool isCorrect = sq.OpenSquare();
+				bool noError = sq.OpenSquare();
 				gameFrame.DrawSquare(sq);
 
-				if(isCorrect && sq.Value == 0)
+				if(sq.Value == 0)
 					ExpandSquares(sq);
-				else if(!isCorrect)
-				{
-					OpenAllMines();
-					ChangeFace(GameFace.Crying);
-				}
+
+				CheckWinOrLose(noError);
 			}
-
-			IsWin();
-		}
-
-		public void AddRemoveFlag(Point point)
-		{
-			Square sq = squares[point.X / squareSize, point.Y / squareSize];
-			if(sq.IsClosed())
-			{
-				sq.AddRemoveFlag();
-				gameFrame.DrawSquare(sq);
-			}
-		}
-
-		public bool ExpandSquares(Square sq)
-		{
-			List<Square> lstAroundSquare = sq.GetAroundSquare(squares, false, true);
-			bool isCorrect = true;
-			foreach(Square sqAround in lstAroundSquare)
-			{
-				isCorrect &= sqAround.OpenSquare();
-				gameFrame.DrawSquare(sqAround);
-
-				if(sqAround.Value == 0)
-					isCorrect &= ExpandSquares(sqAround);
-			}
-			return isCorrect;
 		}
 
 		public void OpenAroundSquares(Point point)
@@ -125,13 +99,38 @@ namespace MineSweeper.Model
 
 			if(!sq.IsClosed() && sq.Value - sq.GetAroundFlagCount(squares) == 0)
 			{
-				if(!ExpandSquares(sq))
-					OpenAllMines();
+				bool noError = ExpandSquares(sq);
+				CheckWinOrLose(noError);
 			}
 			else
 				SetAllSquaresUp();
+		}
 
-			IsWin();
+		public void AddRemoveFlag(Point point)
+		{
+			Square sq = squares[point.X / squareSize, point.Y / squareSize];
+			if(sq.IsClosed())
+			{
+				mineCount += sq.AddRemoveFlag();
+				gameFrame.DrawSquare(sq);
+			}
+			gameFrame.DrawFlagNbr(mineCount);
+		}
+
+		public bool ExpandSquares(Square sq)
+		{
+			bool noError = true;
+			List<Square> lstAroundSquare = sq.GetAroundSquare(squares, false, true);
+
+			foreach(Square sqAround in lstAroundSquare)
+			{
+				noError &= sqAround.OpenSquare();
+				gameFrame.DrawSquare(sqAround);
+
+				if(sqAround.Value == 0)
+					noError &= ExpandSquares(sqAround);
+			}
+			return noError;
 		}
 
 		public void OpenAllSquares(bool hitMine = true)
@@ -159,17 +158,25 @@ namespace MineSweeper.Model
 			}
 		}
 
-		public bool IsWin()
+		public void CheckWinOrLose(bool checkWin = true)
 		{
+			if(checkWin)
+				foreach(Square sq in squares)
+				{
+					if(!sq.IsMine() && sq.Status != MineStatus.OpenedNumber)
+						return;
+				}
 
-			foreach(Square sq in squares)
+			// has result
+			OpenAllMines(checkWin);
+			result = checkWin;
+			ChangeFace(GameFace.SunGlasses);
+
+			if(checkWin)
 			{
-				if(!sq.IsMine() && sq.Status != MineStatus.OpenedNumber)
-					return false;
-			}
-
-			OpenAllMines(true);
-			return true;
+				mineCount = 0;
+				gameFrame.DrawFlagNbr(mineCount);
+			}				
 		}
 
 
@@ -204,7 +211,10 @@ namespace MineSweeper.Model
 
 		public void ChangeFace(GameFace gf)
 		{
-			gameFrame.DrawFace(gf);
+			if(result.HasValue)
+				gameFrame.DrawFace(result == true ? GameFace.SunGlasses : GameFace.Crying);
+			else
+				gameFrame.DrawFace(gf);
 		}
 
 

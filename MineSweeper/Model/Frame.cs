@@ -27,6 +27,7 @@ namespace MineSweeper.Model
 		private readonly int pnlInfoHeight = Int16.Parse(ConfigurationManager.AppSettings["pnlInfoHeight"]);
 		private readonly Bitmap imgMine = new Bitmap(@"..\..\Img\mine.bmp");
 		private readonly Bitmap imgFace = new Bitmap(@"..\..\Img\face.bmp");
+		private readonly Bitmap imgNbr = new Bitmap(@"..\..\Img\number.bmp");
 
 
 		private Color GRAY = Color.FromArgb(192, 192, 192);
@@ -35,8 +36,10 @@ namespace MineSweeper.Model
 
 		public const int ImgMineUnitWidth = 20;
 		public const int ImgFaceUnitWidth = 24;
+		public const int ImgNbrUnitWidth = 14;
+		public const int ImgNbrUnitHeight = 23;
 
-		public Frame(Point gameOffsetPosition, Size mineCountSize)
+		public Frame(Point gameOffsetPosition, Size mineCountSize, int mineCount)
 		{
 			int pnlWidth = mineCountSize.Width * squareSize;
 			int pnlHeight = mineCountSize.Height * squareSize;
@@ -49,6 +52,7 @@ namespace MineSweeper.Model
 			bufferInfoFrame = new Bitmap(rctPnlInfo.Width, rctPnlInfo.Height);
 			bufferMineFrame = new Bitmap(rctPnlMine.Width, rctPnlMine.Height);
 			DrawFace();
+			DrawFlagNbr(mineCount);
 		}
 
 
@@ -101,16 +105,41 @@ namespace MineSweeper.Model
 		public Bitmap DrawFace(GameFace gameFace = GameFace.SmileUp)
 		{
 			Graphics g = Graphics.FromImage(bufferInfoFrame);
-			int faceSize = (rctPnlInfo.Height - 12);
-			
-			Rectangle faceRect = new Rectangle(new Point(rctPnlInfo.Width / 2 - faceSize / 2, rctPnlInfo.Height / 2 - faceSize / 2), new Size(faceSize, faceSize));
-			int a = imgFace.Height;
-			Rectangle srcRect = new Rectangle(new Point(0, (int)gameFace), new Size(ImgFaceUnitWidth, ImgFaceUnitWidth));
-
 			GraphicsUnit units = GraphicsUnit.Pixel;
+			int faceSize = rctPnlInfo.Height - 12;
+
+			Rectangle faceRect = new Rectangle(new Point(rctPnlInfo.Width / 2 - faceSize / 2, rctPnlInfo.Height / 2 - faceSize / 2), new Size(faceSize, faceSize));
+			Rectangle srcRect = new Rectangle(new Point(0, (int)gameFace), new Size(ImgFaceUnitWidth, ImgFaceUnitWidth));
 			g.DrawImage(imgFace, faceRect, srcRect, units);
 
 			return bufferMineFrame;
+		}
+
+		public Bitmap DrawFlagNbr(int flagNbr)
+		{
+			Graphics g = Graphics.FromImage(bufferInfoFrame);
+			GraphicsUnit units = GraphicsUnit.Pixel;
+			int nbrSize = rctPnlInfo.Height - 17;
+
+			if(flagNbr < -99) flagNbr = -99;
+			int fstNbr = flagNbr >= 0 ? Math.Abs(flagNbr / 100) : 11;
+			int scdNbr = Math.Abs(flagNbr / 10 % 10);
+			int trdNbr = Math.Abs(flagNbr % 10);
+
+			Rectangle fstRect = new Rectangle(new Point(5, rctPnlInfo.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle fstSrcRect = new Rectangle(new Point(0, (11 - fstNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, fstRect, fstSrcRect, units);
+
+			Rectangle scdRect = new Rectangle(new Point(fstRect.X + ImgNbrUnitWidth, rctPnlInfo.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle scdSrcRect = new Rectangle(new Point(0, (11 - scdNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, scdRect, scdSrcRect, units);
+
+			Rectangle trdRect = new Rectangle(new Point(scdRect.X + ImgNbrUnitWidth, rctPnlInfo.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle trdSrcRect = new Rectangle(new Point(0, (11 - trdNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, trdRect, trdSrcRect, units);
+
+			return bufferMineFrame;
+
 		}
 
 	}

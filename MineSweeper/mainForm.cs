@@ -41,6 +41,8 @@ namespace MineSweeper
 		{
 			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
 			game = new Game(gameOffsetPosition);
+			leftDown = false;
+			rightDown = false;
 
 			pnlInfo.Location = game.GameFrame.RctPnlInfo.Location;
 			pnlInfo.Size = game.GameFrame.RctPnlInfo.Size;
@@ -63,8 +65,6 @@ namespace MineSweeper
 				{
 					game.KnuthShuffleMine(e.Location);
 					game.IsStart = true;
-					//game.OpenAllSquares();
-					//MessageBox.Show(game.getMineCount().ToString());
 				}
 				game.OpenSingleSquare(e.Location);
 				RefreshFrame();
@@ -73,49 +73,55 @@ namespace MineSweeper
 
 		private void pnlMine_MouseDown(object sender, MouseEventArgs e)
 		{
-			switch(e.Button)
+			if(!game.Result.HasValue)
 			{
-				case MouseButtons.Left:
-					leftDown = true;
-					game.SetSquaresDown(e.Location, rightDown);
-					game.ChangeFace(GameFace.MouthOpen);
-					break;
-				case MouseButtons.Right:
-					rightDown = true;
-					if(!leftDown)
-						game.AddRemoveFlag(e.Location);
-					break;			
+				switch(e.Button)
+				{
+					case MouseButtons.Left:
+						leftDown = true;
+						game.SetSquaresDown(e.Location, rightDown);
+						game.ChangeFace(GameFace.MouthOpen);
+						break;
+					case MouseButtons.Right:
+						rightDown = true;
+						if(!leftDown)
+							game.AddRemoveFlag(e.Location);
+						break;
+				}
+
+				if(leftDown && rightDown && game.InGameSize(e.Location))
+					game.SetSquaresDown(e.Location, true);
+
+				RefreshFrame();
 			}
-
-			if(leftDown && rightDown && game.InGameSize(e.Location))
-				game.SetSquaresDown(e.Location, true);
-
-			RefreshFrame();
 		}
 
 		private void pnlMine_MouseUp(object sender, MouseEventArgs e)
 		{
-			if(leftDown && rightDown && game.InGameSize(e.Location))
-				game.OpenAroundSquares(e.Location);
-
-			switch(e.Button)
+			if(!game.Result.HasValue)
 			{
-				case MouseButtons.Left:
-					leftDown = false;
-					break;
-				case MouseButtons.Right:
-					rightDown = false;
-					//game.AddRemoveFlag(e.Location);
-					break;
+				if(leftDown && rightDown && game.InGameSize(e.Location))
+					game.OpenAroundSquares(e.Location);
+
+				switch(e.Button)
+				{
+					case MouseButtons.Left:
+						leftDown = false;
+						break;
+					case MouseButtons.Right:
+						rightDown = false;
+						break;
+				}
+
+				game.SetAllSquaresUp();
+				game.ChangeFace(GameFace.SmileUp);
+				RefreshFrame();
 			}
-			game.SetAllSquaresUp();
-			game.ChangeFace(GameFace.SmileUp);
-			RefreshFrame();
 		}
 
 		private void pnlMine_MouseMove(object sender, MouseEventArgs e)
 		{
-			if(game.InGameSize(e.Location))
+			if(game.InGameSize(e.Location) && !game.Result.HasValue)
 			{
 				if(leftDown)
 				{

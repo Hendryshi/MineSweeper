@@ -52,7 +52,7 @@ namespace MineSweeper.Model
 
 		public bool OpenSquare(bool hitMine = true, bool hasWin = false)
 		{
-			bool isCorrect = false;
+			bool noError = false;
 			if(IsMine())
 			{
 				if(this.status == MineStatus.Closed || this.status == MineStatus.MouseDown)
@@ -65,25 +65,31 @@ namespace MineSweeper.Model
 						this.status = MineStatus.OpenedMine;
 				}
 				else if(this.status == MineStatus.Flagged)
-					isCorrect = true;
+					noError = true;
 			}
 			else if(this.status == MineStatus.Flagged)
 				this.status = MineStatus.ErrorMine;
 			else
 			{
 				this.status = MineStatus.OpenedNumber;
-				isCorrect = true;
+				noError = true;
 			}
 
-			return isCorrect;
+			return noError;
 		}
 
-		public void AddRemoveFlag()
+		public int AddRemoveFlag()
 		{
 			if(this.status == MineStatus.Flagged)
+			{
 				this.status = MineStatus.Closed;
-			else if(this.status == MineStatus.Closed)
+				return 1;
+			}
+			else
+			{
 				this.status = MineStatus.Flagged;
+				return -1;
+			}
 		}
 
 		public void SetSquareDown()

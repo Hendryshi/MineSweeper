@@ -8,15 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MineSweeper.Model;
+using System.Threading;
 
 namespace MineSweeper
 {
 	public partial class mainForm : Form
 	{
 		private Game game;
+		private System.Threading.Timer threadTimer;
 		private bool leftDown = false;
 		private bool rightDown = false;
-		int test = 0;
 
 		public mainForm()
 		{
@@ -25,11 +26,10 @@ namespace MineSweeper
 
 		private void mainForm_Paint(object sender, PaintEventArgs e)
 		{
-			//game.Draw(this.CreateGraphics(), pnlInfo.CreateGraphics(), pnlMine.CreateGraphics());
-			Size a = ClientRectangle.Size;
-			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
+			this.CreateGraphics().DrawImage(game.GameFrame.MainFrame, game.GameFrame.RctGameField.Location);
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
+			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
 		}
 
 		private void mainForm_Load(object sender, EventArgs e)
@@ -41,31 +41,50 @@ namespace MineSweeper
 		{
 			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
 			game = new Game(gameOffsetPosition);
+			
+			threadTimer = new System.Threading.Timer(new TimerCallback(ChangeTime), null, Timeout.Infinite, 1000);
+
 			leftDown = false;
 			rightDown = false;
 
 			pnlInfo.Location = game.GameFrame.RctPnlInfo.Location;
 			pnlInfo.Size = game.GameFrame.RctPnlInfo.Size;
 
+			pnlTimer.Location = game.GameFrame.RctPnlTimer.Location;
+			pnlTimer.Size = game.GameFrame.RctPnlTimer.Size;
+
 			pnlMine.Location = game.GameFrame.RctPnlMine.Location;
 			pnlMine.Size = game.GameFrame.RctPnlMine.Size;
 
 			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
 
-			this.CreateGraphics().DrawImage(game.GameFrame.DrawMainFrame(), game.GameFrame.RctGameField.Location);
+			this.CreateGraphics().DrawImage(game.GameFrame.MainFrame, game.GameFrame.RctGameField.Location);
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
+			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
+		}
+
+		private void ChangeTime(object value)
+		{
+			if(!game.Result.HasValue)
+			{
+				game.ChangeTime();
+				pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
+			}
+			else
+				threadTimer.Dispose();
 		}
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
 		{
-			if(e.Button == MouseButtons.Left && (!leftDown || !rightDown) && game.InGameSize(e.Location))
+			if(e.Button == MouseButtons.Left && (!leftDown || !rightDown) && game.InGameSize(e.Location) && !game.Result.HasValue)
 			{
 				if(!game.IsStart)
 				{
-					game.KnuthShuffleMine(e.Location);
-					game.IsStart = true;
+					game.StartGame(e.Location);
+					threadTimer.Change(0, 1000);
 				}
+
 				game.OpenSingleSquare(e.Location);
 				RefreshFrame();
 			}

@@ -35,7 +35,9 @@ namespace MineSweeper
 			this.newGameNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pnlInfo = new System.Windows.Forms.Panel();
 			this.pnlMine = new System.Windows.Forms.Panel();
+			this.pnlTimer = new System.Windows.Forms.Panel();
 			this.mainMenuStrip.SuspendLayout();
+			this.pnlInfo.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// mainMenuStrip
@@ -67,6 +69,7 @@ namespace MineSweeper
 			// pnlInfo
 			// 
 			this.pnlInfo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+			this.pnlInfo.Controls.Add(this.pnlTimer);
 			this.pnlInfo.Location = new System.Drawing.Point(12, 41);
 			this.pnlInfo.Name = "pnlInfo";
 			this.pnlInfo.Size = new System.Drawing.Size(1158, 52);
@@ -87,6 +90,14 @@ namespace MineSweeper
 			this.pnlMine.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseMove);
 			this.pnlMine.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseUp);
 			// 
+			// pnlTimer
+			// 
+			this.pnlTimer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+			this.pnlTimer.Location = new System.Drawing.Point(1071, 15);
+			this.pnlTimer.Name = "pnlTimer";
+			this.pnlTimer.Size = new System.Drawing.Size(71, 34);
+			this.pnlTimer.TabIndex = 3;
+			// 
 			// mainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -102,6 +113,7 @@ namespace MineSweeper
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.mainForm_Paint);
 			this.mainMenuStrip.ResumeLayout(false);
 			this.mainMenuStrip.PerformLayout();
+			this.pnlInfo.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -114,6 +126,7 @@ namespace MineSweeper
         private System.Windows.Forms.ToolStripMenuItem newGameNToolStripMenuItem;
         private System.Windows.Forms.Panel pnlInfo;
         private System.Windows.Forms.Panel pnlMine;
-    }
+		private System.Windows.Forms.Panel pnlTimer;
+	}
 }
 

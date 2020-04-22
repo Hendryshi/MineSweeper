@@ -14,10 +14,10 @@ namespace MineSweeper.Model
 		private Frame gameFrame;
 		private bool isStart;
 		private bool? result;
-
+		
 		private readonly GameLevel level;
 		private int mineCount;
-		private readonly Size gameOffsetSize;
+		private int timeNbr;
 		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
 
 		#region test
@@ -41,21 +41,34 @@ namespace MineSweeper.Model
 		}
 		#endregion
 
-		public Game(Point gameOffsetPosition)
+		public Game(Point gameOffsetPosition, GameLevel level = GameLevel.Intermediate)
 		{
-			//this.gameOffsetSize = gameOffsetPosition;
-			squares = new Square[30, 16];
+			switch(level)
+			{
+				case GameLevel.Beginner:
+					squares = new Square[9, 9];
+					mineCount = 99;
+					break;
+				case GameLevel.Intermediate:
+					squares = new Square[16, 16];
+					mineCount = 40;
+					break;
+				case GameLevel.Expert:
+					squares = new Square[30, 16];
+					mineCount = 99;
+					break;
+			}
+
 			isStart = false;
 			result = null;
-			level = GameLevel.Beginner;
-			mineCount = 99;
+			this.level = level;
+			timeNbr = 0;
 			gameFrame = new Frame(gameOffsetPosition, new Size(squares.GetLength(0), squares.GetLength(1)), mineCount);
 			CreateSquares();
 		}
 
 		public Frame GameFrame { get => gameFrame; }
 		public bool IsStart { get => isStart; set { isStart = value; } }
-
 		public bool? Result { get => result; }
 
 		public bool InGameSize(Point location)
@@ -63,7 +76,13 @@ namespace MineSweeper.Model
 			return location.X > 0 && location.Y > 0 && location.X < gameFrame.RctPnlMine.Width && location.Y < gameFrame.RctPnlMine.Height;
 		}
 
-		public void CreateSquares()
+		public void StartGame(Point point)
+		{
+			KnuthShuffleMine(point);
+			IsStart = true;
+		}
+
+		private void CreateSquares()
 		{
 			for(int y = 0; y < squares.GetLength(1); y++)
 			{
@@ -142,7 +161,7 @@ namespace MineSweeper.Model
 			}
 		}
 
-		public void OpenAllMines(bool hasWin = false)
+		private void OpenAllMines(bool hasWin = false)
 		{
 			var query = from Square sq in squares
 						where sq.IsClosed()
@@ -158,7 +177,7 @@ namespace MineSweeper.Model
 			}
 		}
 
-		public void CheckWinOrLose(bool checkWin = true)
+		private void CheckWinOrLose(bool checkWin = true)
 		{
 			if(checkWin)
 				foreach(Square sq in squares)
@@ -176,7 +195,7 @@ namespace MineSweeper.Model
 			{
 				mineCount = 0;
 				gameFrame.DrawFlagNbr(mineCount);
-			}				
+			}
 		}
 
 
@@ -217,8 +236,14 @@ namespace MineSweeper.Model
 				gameFrame.DrawFace(gf);
 		}
 
+		public void ChangeTime()
+		{
+			gameFrame.DrawTimeNbr(timeNbr);
+			timeNbr++;
+		}
 
-		public void KnuthShuffleMine(Point point)
+
+		private void KnuthShuffleMine(Point point)
 		{
 			Random ran = new Random();
 			int indexX = point.X / squareSize;
@@ -259,7 +284,6 @@ namespace MineSweeper.Model
 					sqAround.Value += 1;
 					gameFrame.DrawSquare(sqAround);
 				}
-				//lstAroundSquare.ForEach(item => { item.Value = item.Value + 1; gameFrame.DrawSquare(item); });
 			}
 		}
 

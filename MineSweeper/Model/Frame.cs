@@ -12,13 +12,13 @@ namespace MineSweeper.Model
 	{
 		
 		private readonly Rectangle rctPnlInfo;
-
+		private readonly Rectangle rctPnlTimer;
 		private readonly Rectangle rctPnlMine;
-
 		private readonly Rectangle rctGameField;
 
 		private Bitmap bufferMainFrame;
 		private Bitmap bufferInfoFrame;
+		private Bitmap bufferTimerFrame;
 		private Bitmap bufferMineFrame;
 
 
@@ -44,23 +44,31 @@ namespace MineSweeper.Model
 			int pnlWidth = mineCountSize.Width * squareSize;
 			int pnlHeight = mineCountSize.Height * squareSize;
 			rctPnlInfo = new Rectangle(new Point(gameOffsetPosition.X + boardWidth, gameOffsetPosition.Y + boardWidth), new Size(pnlWidth, pnlInfoHeight));
+			//rctPnlTimer = new Rectangle(new Point(rctPnlInfo.X + rctPnlInfo.Width - 5 - 3 * ImgNbrUnitWidth, rctPnlInfo.Y), new Size(3 * ImgNbrUnitWidth, pnlInfoHeight));
+			rctPnlTimer = new Rectangle(new Point(rctPnlInfo.Width - 5 - 3 * ImgNbrUnitWidth, 0), new Size(3 * ImgNbrUnitWidth, pnlInfoHeight));
 			rctPnlMine = new Rectangle(new Point(rctPnlInfo.X, rctPnlInfo.Y + rctPnlInfo.Height + boardWidth), new Size(pnlWidth, pnlHeight));
 
 			rctGameField = new Rectangle(gameOffsetPosition, new Size(pnlWidth + boardWidth * 2, rctPnlInfo.Height + RctPnlMine.Height + boardWidth * 3));
 
 			bufferMainFrame = new Bitmap(rctGameField.Width, rctGameField.Height);
 			bufferInfoFrame = new Bitmap(rctPnlInfo.Width, rctPnlInfo.Height);
+			bufferTimerFrame = new Bitmap(rctPnlTimer.Width, rctPnlTimer.Height);
 			bufferMineFrame = new Bitmap(rctPnlMine.Width, rctPnlMine.Height);
+			DrawMainFrame();
 			DrawFace();
 			DrawFlagNbr(mineCount);
+			DrawTimeNbr();
 		}
 
 
 		public Rectangle RctPnlInfo { get => rctPnlInfo; }
+		public Rectangle RctPnlTimer { get => rctPnlTimer; }
 		public Rectangle RctPnlMine { get => rctPnlMine; }
 		public Rectangle RctGameField { get => rctGameField; }
+		public Bitmap MainFrame { get => bufferMainFrame; }
 		public Bitmap MineFrame { get => bufferMineFrame; }
 		public Bitmap InfoFrame { get => bufferInfoFrame; }
+		public Bitmap TimerFrame { get => bufferTimerFrame; }
 
 
 		public Bitmap DrawMainFrame()
@@ -135,6 +143,33 @@ namespace MineSweeper.Model
 			g.DrawImage(imgNbr, scdRect, scdSrcRect, units);
 
 			Rectangle trdRect = new Rectangle(new Point(scdRect.X + ImgNbrUnitWidth, rctPnlInfo.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle trdSrcRect = new Rectangle(new Point(0, (11 - trdNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, trdRect, trdSrcRect, units);
+
+			return bufferMineFrame;
+
+		}
+
+		public Bitmap DrawTimeNbr(int timeNbr = 0)
+		{
+			Graphics g = Graphics.FromImage(bufferTimerFrame);
+			GraphicsUnit units = GraphicsUnit.Pixel;
+			int nbrSize = rctPnlInfo.Height - 17;
+
+			if(timeNbr > 999) timeNbr = 999;
+			int fstNbr = timeNbr / 100;
+			int scdNbr = timeNbr / 10 % 10;
+			int trdNbr = timeNbr % 10;
+
+			Rectangle fstRect = new Rectangle(new Point(0, rctPnlTimer.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle fstSrcRect = new Rectangle(new Point(0, (11 - fstNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, fstRect, fstSrcRect, units);
+
+			Rectangle scdRect = new Rectangle(new Point(fstRect.X + ImgNbrUnitWidth, rctPnlTimer.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
+			Rectangle scdSrcRect = new Rectangle(new Point(0, (11 - scdNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
+			g.DrawImage(imgNbr, scdRect, scdSrcRect, units);
+
+			Rectangle trdRect = new Rectangle(new Point(scdRect.X + ImgNbrUnitWidth, rctPnlTimer.Height / 2 - nbrSize / 2), new Size(ImgNbrUnitWidth, nbrSize));
 			Rectangle trdSrcRect = new Rectangle(new Point(0, (11 - trdNbr) * ImgNbrUnitHeight), new Size(ImgNbrUnitWidth, ImgNbrUnitHeight));
 			g.DrawImage(imgNbr, trdRect, trdSrcRect, units);
 

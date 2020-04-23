@@ -47,7 +47,7 @@ namespace MineSweeper.Model
 			{
 				case GameLevel.Beginner:
 					squares = new Square[9, 9];
-					mineCount = 99;
+					mineCount = 10;
 					break;
 				case GameLevel.Intermediate:
 					squares = new Square[16, 16];
@@ -70,6 +70,8 @@ namespace MineSweeper.Model
 		public Frame GameFrame { get => gameFrame; }
 		public bool IsStart { get => isStart; set { isStart = value; } }
 		public bool? Result { get => result; }
+
+		public int TimeRecord { get => timeNbr; }
 
 		public bool InGameSize(Point location)
 		{

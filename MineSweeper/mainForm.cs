@@ -18,6 +18,7 @@ namespace MineSweeper
 		private System.Threading.Timer threadTimer;
 		private bool leftDown = false;
 		private bool rightDown = false;
+		private GameLevel level = GameLevel.Beginner;
 
 		public mainForm()
 		{
@@ -34,14 +35,18 @@ namespace MineSweeper
 
 		private void mainForm_Load(object sender, EventArgs e)
 		{
-			newGame();
+			newGame(level);
 		}
 
-		private void newGame()
+		private void newGame(GameLevel level)
 		{
 			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
-			game = new Game(gameOffsetPosition);
-			
+			this.level = level;
+			game = new Game(gameOffsetPosition, level);
+
+			if(threadTimer != null)
+				threadTimer.Dispose();
+
 			threadTimer = new System.Threading.Timer(new TimerCallback(ChangeTime), null, Timeout.Infinite, 1000);
 
 			leftDown = false;
@@ -72,7 +77,11 @@ namespace MineSweeper
 				pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
 			}
 			else
+			{
 				threadTimer.Dispose();
+				this.rankBegItem.Text = "Beginner: " + game.TimeRecord;
+
+			}
 		}
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
@@ -168,7 +177,27 @@ namespace MineSweeper
 
 		private void pnlInfo_MouseClick(object sender, MouseEventArgs e)
 		{
-			newGame();
+			newGame(level);
+		}
+
+		private void newGameNToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			newGame(level);
+		}
+
+		private void beginnerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			newGame(GameLevel.Beginner);
+		}
+
+		private void begToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			newGame(GameLevel.Intermediate);
+		}
+
+		private void expertEToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			newGame(GameLevel.Expert);
 		}
 	}
 }

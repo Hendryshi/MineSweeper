@@ -54,6 +54,12 @@ namespace MineSweeper.Model
 			bufferInfoFrame = new Bitmap(rctPnlInfo.Width, rctPnlInfo.Height);
 			bufferTimerFrame = new Bitmap(rctPnlTimer.Width, rctPnlTimer.Height);
 			bufferMineFrame = new Bitmap(rctPnlMine.Width, rctPnlMine.Height);
+
+			Graphics.FromImage(bufferMainFrame).Clear(GRAY);
+			Graphics.FromImage(bufferInfoFrame).Clear(GRAY);
+			Graphics.FromImage(bufferTimerFrame).Clear(GRAY);
+			Graphics.FromImage(bufferMineFrame).Clear(GRAY);
+
 			DrawMainFrame();
 			DrawFace();
 			DrawFlagNbr(mineCount);
@@ -113,6 +119,7 @@ namespace MineSweeper.Model
 		public Bitmap DrawFace(GameFace gameFace = GameFace.SmileUp)
 		{
 			Graphics g = Graphics.FromImage(bufferInfoFrame);
+			
 			GraphicsUnit units = GraphicsUnit.Pixel;
 			int faceSize = rctPnlInfo.Height - 12;
 

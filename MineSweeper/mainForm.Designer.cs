@@ -135,8 +135,6 @@ namespace MineSweeper
 			this.pnlMine.TabIndex = 2;
 			this.pnlMine.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseClick);
 			this.pnlMine.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseDown);
-			this.pnlMine.MouseEnter += new System.EventHandler(this.pnlMine_MouseEnter);
-			this.pnlMine.MouseLeave += new System.EventHandler(this.pnlMine_MouseLeave);
 			this.pnlMine.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseMove);
 			this.pnlMine.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseUp);
 			// 
@@ -154,19 +152,19 @@ namespace MineSweeper
 			// 
 			this.rankBegItem.Name = "rankBegItem";
 			this.rankBegItem.Size = new System.Drawing.Size(224, 26);
-			this.rankBegItem.Text = "Beginner";
+			this.rankBegItem.Text = "Beginner: " + Properties.Settings.Default["BegRecord"];
 			// 
 			// intermediateToolStripMenuItem
 			// 
 			this.rankInterItem.Name = "rankInterItem";
 			this.rankInterItem.Size = new System.Drawing.Size(224, 26);
-			this.rankInterItem.Text = "Intermediate";
+			this.rankInterItem.Text = "Intermediate: " + Properties.Settings.Default["InterRecord"];
 			// 
 			// expertToolStripMenuItem
 			// 
 			this.rankExpertItem.Name = "rankExpertItem";
 			this.rankExpertItem.Size = new System.Drawing.Size(224, 26);
-			this.rankExpertItem.Text = "Expert";
+			this.rankExpertItem.Text = "Expert: " + Properties.Settings.Default["ExpertRecord"];
 			// 
 			// mainForm
 			// 

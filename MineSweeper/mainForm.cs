@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using MineSweeper.Model;
 using System.Threading;
 
+
 namespace MineSweeper
 {
 	public partial class mainForm : Form
@@ -18,12 +19,14 @@ namespace MineSweeper
 		private System.Threading.Timer threadTimer;
 		private bool leftDown = false;
 		private bool rightDown = false;
-		private GameLevel level = GameLevel.Beginner;
+		private GameLevel level = (GameLevel)Properties.Settings.Default["Level"];
 
 		public mainForm()
 		{
 			InitializeComponent();
 		}
+
+		public delegate void MyInvoke();
 
 		private void mainForm_Paint(object sender, PaintEventArgs e)
 		{
@@ -62,6 +65,10 @@ namespace MineSweeper
 			pnlMine.Size = game.GameFrame.RctPnlMine.Size;
 
 			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
+			this.FormBorderStyle = FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
+			this.CenterToScreen();
+
 
 			this.CreateGraphics().DrawImage(game.GameFrame.MainFrame, game.GameFrame.RctGameField.Location);
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
@@ -69,6 +76,7 @@ namespace MineSweeper
 			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
 		}
 
+		//TODO
 		private void ChangeTime(object value)
 		{
 			if(!game.Result.HasValue)
@@ -79,9 +87,39 @@ namespace MineSweeper
 			else
 			{
 				threadTimer.Dispose();
-				this.rankBegItem.Text = "Beginner: " + game.TimeRecord;
-
+				if(game.Result == true && game.CheckBreakRecord())
+				{
+					MyInvoke mi = new MyInvoke(SetNewRecords);
+					BeginInvoke(mi);
+				}	
 			}
+		}
+
+		private void SetNewRecords()
+		{
+			if(level == GameLevel.Beginner)
+			{
+				this.rankBegItem.Text = "Beginner: " + game.TimeRecord;
+				Properties.Settings.Default["BegRecord"] = game.TimeRecord;
+			}
+			else if(level == GameLevel.Intermediate)
+			{
+				this.rankInterItem.Text = "Intermediate: " + game.TimeRecord;
+				Properties.Settings.Default["InterRecord"] = game.TimeRecord;
+			}
+			else if(level == GameLevel.Expert)
+			{
+				this.rankExpertItem.Text = "Expert: " + game.TimeRecord;
+				Properties.Settings.Default["ExpertRecord"] = game.TimeRecord;
+			}
+			Properties.Settings.Default.Save();
+			MessageBox.Show("You have break a new records: " + game.TimeRecord);
+		}
+
+		private void RefreshFrame()
+		{
+			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
+			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
 		}
 
 		private void pnlMine_MouseClick(object sender, MouseEventArgs e)
@@ -159,22 +197,6 @@ namespace MineSweeper
 			}
 		}
 
-		private void pnlMine_MouseEnter(object sender, EventArgs e)
-		{
-
-		}
-
-		private void pnlMine_MouseLeave(object sender, EventArgs e)
-		{
-
-		}
-
-		private void RefreshFrame()
-		{
-			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
-			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
-		}
-
 		private void pnlInfo_MouseClick(object sender, MouseEventArgs e)
 		{
 			newGame(level);
@@ -188,16 +210,22 @@ namespace MineSweeper
 		private void beginnerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			newGame(GameLevel.Beginner);
+			Properties.Settings.Default["Level"] = (int)GameLevel.Beginner;
+			Properties.Settings.Default.Save();
 		}
 
 		private void begToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			newGame(GameLevel.Intermediate);
+			Properties.Settings.Default["Level"] = (int)GameLevel.Intermediate;
+			Properties.Settings.Default.Save();
 		}
 
 		private void expertEToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			newGame(GameLevel.Expert);
+			Properties.Settings.Default["Level"] = (int)GameLevel.Expert;
+			Properties.Settings.Default.Save();
 		}
 	}
 }

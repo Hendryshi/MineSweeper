@@ -200,6 +200,20 @@ namespace MineSweeper.Model
 			}
 		}
 
+		public bool CheckBreakRecord()
+		{
+			switch(level)
+			{
+				case GameLevel.Beginner:
+					return timeNbr < (int)Properties.Settings.Default["BegRecord"];
+				case GameLevel.Intermediate:
+					return timeNbr < (int)Properties.Settings.Default["InterRecord"];
+				case GameLevel.Expert:
+					return timeNbr < (int)Properties.Settings.Default["ExpertRecord"];
+				default:
+					return false;
+			}
+		}
 
 		public void SetSquaresDown(Point point, bool getAround = false)
 		{
@@ -240,8 +254,8 @@ namespace MineSweeper.Model
 
 		public void ChangeTime()
 		{
-			gameFrame.DrawTimeNbr(timeNbr);
 			timeNbr++;
+			gameFrame.DrawTimeNbr(timeNbr);
 		}
 
 

@@ -37,13 +37,13 @@ namespace MineSweeper
 			this.beginnerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.begToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.expertEToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pnlInfo = new System.Windows.Forms.Panel();
-			this.pnlTimer = new System.Windows.Forms.Panel();
-			this.pnlMine = new System.Windows.Forms.Panel();
 			this.rankRToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rankBegItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rankInterItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.rankExpertItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pnlInfo = new System.Windows.Forms.Panel();
+			this.pnlTimer = new System.Windows.Forms.Panel();
+			this.pnlMine = new System.Windows.Forms.Panel();
 			this.mainMenuStrip.SuspendLayout();
 			this.pnlInfo.SuspendLayout();
 			this.SuspendLayout();
@@ -78,35 +78,63 @@ namespace MineSweeper
 			this.newGameNToolStripMenuItem.Name = "newGameNToolStripMenuItem";
 			this.newGameNToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
 			this.newGameNToolStripMenuItem.ShowShortcutKeys = false;
-			this.newGameNToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.newGameNToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
 			this.newGameNToolStripMenuItem.Text = "New Game(&N)";
 			this.newGameNToolStripMenuItem.Click += new System.EventHandler(this.newGameNToolStripMenuItem_Click);
 			// 
 			// toolStripMenuItem1
 			// 
 			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(221, 6);
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(197, 6);
 			// 
 			// beginnerToolStripMenuItem
 			// 
 			this.beginnerToolStripMenuItem.Name = "beginnerToolStripMenuItem";
-			this.beginnerToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.beginnerToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
 			this.beginnerToolStripMenuItem.Text = "Beginner(&B)";
 			this.beginnerToolStripMenuItem.Click += new System.EventHandler(this.beginnerToolStripMenuItem_Click);
 			// 
 			// begToolStripMenuItem
 			// 
 			this.begToolStripMenuItem.Name = "begToolStripMenuItem";
-			this.begToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.begToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
 			this.begToolStripMenuItem.Text = "Intermediate(&I)";
 			this.begToolStripMenuItem.Click += new System.EventHandler(this.begToolStripMenuItem_Click);
 			// 
 			// expertEToolStripMenuItem
 			// 
 			this.expertEToolStripMenuItem.Name = "expertEToolStripMenuItem";
-			this.expertEToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+			this.expertEToolStripMenuItem.Size = new System.Drawing.Size(200, 26);
 			this.expertEToolStripMenuItem.Text = "Expert(E)";
 			this.expertEToolStripMenuItem.Click += new System.EventHandler(this.expertEToolStripMenuItem_Click);
+			// 
+			// rankRToolStripMenuItem
+			// 
+			this.rankRToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.rankBegItem,
+            this.rankInterItem,
+            this.rankExpertItem});
+			this.rankRToolStripMenuItem.Name = "rankRToolStripMenuItem";
+			this.rankRToolStripMenuItem.Size = new System.Drawing.Size(78, 24);
+			this.rankRToolStripMenuItem.Text = "Rank(&R)";
+			// 
+			// rankBegItem
+			// 
+			this.rankBegItem.Name = "rankBegItem";
+			this.rankBegItem.Size = new System.Drawing.Size(194, 26);
+			this.rankBegItem.Text = "Beginner: " + Properties.Settings.Default["BegRecord"];
+			// 
+			// rankInterItem
+			// 
+			this.rankInterItem.Name = "rankInterItem";
+			this.rankInterItem.Size = new System.Drawing.Size(194, 26);
+			this.rankInterItem.Text = "Intermediate: " + Properties.Settings.Default["InterRecord"];
+			// 
+			// rankExpertItem
+			// 
+			this.rankExpertItem.Name = "rankExpertItem";
+			this.rankExpertItem.Size = new System.Drawing.Size(194, 26);
+			this.rankExpertItem.Text = "Expert: " + Properties.Settings.Default["ExpertRecord"];
 			// 
 			// pnlInfo
 			// 
@@ -138,34 +166,6 @@ namespace MineSweeper
 			this.pnlMine.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseMove);
 			this.pnlMine.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlMine_MouseUp);
 			// 
-			// rankRToolStripMenuItem
-			// 
-			this.rankRToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.rankBegItem,
-            this.rankInterItem,
-            this.rankExpertItem});
-			this.rankRToolStripMenuItem.Name = "rankRToolStripMenuItem";
-			this.rankRToolStripMenuItem.Size = new System.Drawing.Size(78, 24);
-			this.rankRToolStripMenuItem.Text = "Rank(&R)";
-			// 
-			// beginnerToolStripMenuItem1
-			// 
-			this.rankBegItem.Name = "rankBegItem";
-			this.rankBegItem.Size = new System.Drawing.Size(224, 26);
-			this.rankBegItem.Text = "Beginner: " + Properties.Settings.Default["BegRecord"];
-			// 
-			// intermediateToolStripMenuItem
-			// 
-			this.rankInterItem.Name = "rankInterItem";
-			this.rankInterItem.Size = new System.Drawing.Size(224, 26);
-			this.rankInterItem.Text = "Intermediate: " + Properties.Settings.Default["InterRecord"];
-			// 
-			// expertToolStripMenuItem
-			// 
-			this.rankExpertItem.Name = "rankExpertItem";
-			this.rankExpertItem.Size = new System.Drawing.Size(224, 26);
-			this.rankExpertItem.Text = "Expert: " + Properties.Settings.Default["ExpertRecord"];
-			// 
 			// mainForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -176,6 +176,9 @@ namespace MineSweeper
 			this.Controls.Add(this.mainMenuStrip);
 			this.MainMenuStrip = this.mainMenuStrip;
 			this.Name = "mainForm";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+			this.MaximizeBox = false;
 			this.Text = "MineSweeper";
 			this.Load += new System.EventHandler(this.mainForm_Load);
 			this.Paint += new System.Windows.Forms.PaintEventHandler(this.mainForm_Paint);

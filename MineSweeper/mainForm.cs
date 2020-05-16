@@ -36,6 +36,7 @@ namespace MineSweeper
 			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
 		}
 
+
 		private void mainForm_Load(object sender, EventArgs e)
 		{
 			newGame(level);
@@ -43,6 +44,7 @@ namespace MineSweeper
 
 		private void newGame(GameLevel level)
 		{
+			//Size = new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 			Point gameOffsetPosition = new Point(0, this.mainMenuStrip.Height);
 			this.level = level;
 			game = new Game(gameOffsetPosition, level);
@@ -65,18 +67,13 @@ namespace MineSweeper
 			pnlMine.Size = game.GameFrame.RctPnlMine.Size;
 
 			ClientSize = new Size(game.GameFrame.RctGameField.Width + gameOffsetPosition.X, game.GameFrame.RctGameField.Height + gameOffsetPosition.Y);
-			this.FormBorderStyle = FormBorderStyle.FixedSingle;
-			this.MaximizeBox = false;
-			this.CenterToScreen();
-
 
 			this.CreateGraphics().DrawImage(game.GameFrame.MainFrame, game.GameFrame.RctGameField.Location);
 			pnlMine.CreateGraphics().DrawImage(game.GameFrame.MineFrame, ClientRectangle.Location);
 			pnlInfo.CreateGraphics().DrawImage(game.GameFrame.InfoFrame, ClientRectangle.Location);
-			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);
+			pnlTimer.CreateGraphics().DrawImage(game.GameFrame.TimerFrame, ClientRectangle.Location);			
 		}
 
-		//TODO
 		private void ChangeTime(object value)
 		{
 			if(!game.Result.HasValue)
@@ -91,7 +88,7 @@ namespace MineSweeper
 				{
 					MyInvoke mi = new MyInvoke(SetNewRecords);
 					BeginInvoke(mi);
-				}	
+				}
 			}
 		}
 

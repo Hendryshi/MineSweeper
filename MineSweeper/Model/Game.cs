@@ -14,13 +14,13 @@ namespace MineSweeper.Model
 		private Frame gameFrame;
 		private bool isStart;
 		private bool? result;
-		
+
 		private readonly GameLevel level;
 		private int mineCount;
 		private int timeNbr;
 		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
 
-		#region test
+		#region testFunction
 		public override string ToString()
 		{
 			string str = string.Empty;

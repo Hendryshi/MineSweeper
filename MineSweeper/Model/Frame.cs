@@ -25,9 +25,9 @@ namespace MineSweeper.Model
 		private readonly int boardWidth = Int16.Parse(ConfigurationManager.AppSettings["boardWidth"]);
 		private readonly int squareSize = Int16.Parse(ConfigurationManager.AppSettings["squareSize"]);
 		private readonly int pnlInfoHeight = Int16.Parse(ConfigurationManager.AppSettings["pnlInfoHeight"]);
-		private readonly Bitmap imgMine = new Bitmap(@"..\..\Img\mine.bmp");
-		private readonly Bitmap imgFace = new Bitmap(@"..\..\Img\face.bmp");
-		private readonly Bitmap imgNbr = new Bitmap(@"..\..\Img\number.bmp");
+		private readonly Bitmap imgMine = new Bitmap(@"Img\mine.bmp");
+		private readonly Bitmap imgFace = new Bitmap(@"Img\face.bmp");
+		private readonly Bitmap imgNbr = new Bitmap(@"Img\number.bmp");
 
 
 		private Color GRAY = Color.FromArgb(192, 192, 192);
@@ -43,11 +43,10 @@ namespace MineSweeper.Model
 		{
 			int pnlWidth = mineCountSize.Width * squareSize;
 			int pnlHeight = mineCountSize.Height * squareSize;
+
 			rctPnlInfo = new Rectangle(new Point(gameOffsetPosition.X + boardWidth, gameOffsetPosition.Y + boardWidth), new Size(pnlWidth, pnlInfoHeight));
-			//rctPnlTimer = new Rectangle(new Point(rctPnlInfo.X + rctPnlInfo.Width - 5 - 3 * ImgNbrUnitWidth, rctPnlInfo.Y), new Size(3 * ImgNbrUnitWidth, pnlInfoHeight));
 			rctPnlTimer = new Rectangle(new Point(rctPnlInfo.Width - 5 - 3 * ImgNbrUnitWidth, 0), new Size(3 * ImgNbrUnitWidth, pnlInfoHeight));
 			rctPnlMine = new Rectangle(new Point(rctPnlInfo.X, rctPnlInfo.Y + rctPnlInfo.Height + boardWidth), new Size(pnlWidth, pnlHeight));
-
 			rctGameField = new Rectangle(gameOffsetPosition, new Size(pnlWidth + boardWidth * 2, rctPnlInfo.Height + RctPnlMine.Height + boardWidth * 3));
 
 			bufferMainFrame = new Bitmap(rctGameField.Width, rctGameField.Height);
